@@ -507,6 +507,93 @@
   .c-6 { grid-column: span 3; grid-row: span 1; }
   .c-7 { grid-column: span 3; grid-row: span 1; }
   .c-8 { grid-column: span 6; grid-row: span 1; }
+  .c-9 { grid-column: span 6; grid-row: span 1; }
+
+  /* In-progress card variant */
+  .card.wip {
+    background:
+      radial-gradient(900px 500px at 100% 0%, rgba(185,255,60,0.10), transparent 55%),
+      linear-gradient(180deg, #0c0d09, #0a0908);
+    border: 1px dashed rgba(185,255,60,0.35);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: stretch;
+    min-height: 320px;
+  }
+  .card.wip h4 { font-size: clamp(34px, 4vw, 60px); line-height: 1.04; letter-spacing: -0.02em; }
+  .card.wip h4 .arr { color: var(--signal); }
+  .card.wip .tag { color: var(--signal); }
+  .card.wip .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--signal);
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    margin-top: 14px;
+  }
+  .card.wip .pill .d { width: 7px; height: 7px; background: var(--signal); border-radius: 50%; animation: pulse 1.6s infinite; }
+  .card.wip .kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 22px;
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 18px;
+  }
+  .card.wip .kpis .k {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .card.wip .kpis .k b {
+    display: block;
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "wght" 380;
+    font-size: 32px;
+    color: var(--signal);
+    font-style: italic;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 4px;
+  }
+  .terminal {
+    border: 1px solid var(--rule-strong);
+    background: rgba(0,0,0,0.45);
+    padding: 16px 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+  }
+  .terminal::before {
+    content: '● ● ●';
+    display: block;
+    color: var(--muted);
+    font-size: 8px;
+    letter-spacing: 0.4em;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 8px;
+  }
+  .terminal .ln { display: block; }
+  .terminal .pr { color: var(--signal); }
+  .terminal .cm { color: var(--muted); font-style: italic; }
+  .terminal .ok { color: var(--signal); }
+  .terminal .wrn { color: var(--flare); }
+  .terminal .cur::after {
+    content: '▮';
+    color: var(--signal);
+    animation: blink 1s steps(2) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
 
   /* Noir card variant */
   .card.noir {
@@ -795,8 +882,8 @@
     .skills { grid-template-columns: 1fr; gap: 40px; }
     .ach { grid-template-columns: 1fr; gap: 40px; }
     .bento { grid-template-columns: 1fr; }
-    .c-1, .c-2, .c-3, .c-4, .c-5, .c-6, .c-7, .c-8 { grid-column: span 1; grid-row: auto; }
-    .card.noir { grid-template-columns: 1fr; gap: 24px; min-height: auto; }
+    .c-1, .c-2, .c-3, .c-4, .c-5, .c-6, .c-7, .c-8, .c-9 { grid-column: span 1; grid-row: auto; }
+    .card.noir, .card.wip { grid-template-columns: 1fr; gap: 24px; min-height: auto; }
     .contact-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
     section { padding: 80px 24px; }
   }
@@ -1009,7 +1096,7 @@
   <!-- PROJECTS -->
   <section id="projects">
     <div class="sec-head">
-      <span class="num">/04</span><span>Selected Work · Projects</span><span class="line"></span><span>7 artifacts</span>
+      <span class="num">/04</span><span>Selected Work · Projects</span><span class="line"></span><span>9 artifacts</span>
     </div>
 
     <div class="bento">
@@ -1144,6 +1231,41 @@
           <div class="row"><span>Suspects</span><span>Unknown</span></div>
           <div class="row"><span>Endings</span><span>3 possible</span></div>
           <span class="stamp">CLASSIFIED</span>
+        </div>
+      </a>
+
+      <a class="card c-9 wip reveal" href="https://nexus-ai-hire.vercel.app/sign-in" target="_blank" rel="noopener">
+        <div>
+          <span class="tag">/// 09 · IN PROGRESS</span>
+          <h4>Nexus <em>AI Hire <span class="arr">↗</span></em></h4>
+          <span class="pill"><span class="d"></span>Building · Live alpha</span>
+          <p style="margin-top:18px">Live-performance hiring platform — replaces resume parsing with verifiable skill assessments. Three personas (job-seeker · recruiter · employer) under one auth surface. Doubles as a resume upskiller for candidates and a talent-discovery engine for hiring teams. OTP-gated for verified work-email auth.</p>
+          <div class="kpis">
+            <div class="k"><b>12k+</b>Verified candidates</div>
+            <div class="k"><b>98%</b>Hire accuracy</div>
+            <div class="k"><b>3×</b>Faster hiring</div>
+          </div>
+          <div class="stack" style="margin-top:18px">
+            <span class="chip">Next.js</span>
+            <span class="chip">TypeScript</span>
+            <span class="chip">Vercel</span>
+            <span class="chip">OTP Auth</span>
+            <span class="chip">AI / LLM</span>
+            <span class="chip">Postgres</span>
+          </div>
+          <span class="link" style="margin-top:22px">Open alpha → nexus-ai-hire.vercel.app</span>
+        </div>
+        <div class="terminal" aria-hidden="true">
+          <span class="ln"><span class="cm"># nexus-ai-hire · build log</span></span>
+          <span class="ln"><span class="pr">$</span> pnpm dev</span>
+          <span class="ln"><span class="ok">✓</span> next ready in 1.2s</span>
+          <span class="ln"><span class="ok">✓</span> auth/otp · live</span>
+          <span class="ln"><span class="ok">✓</span> assess/runtime · live</span>
+          <span class="ln"><span class="ok">✓</span> recruiter/discover · live</span>
+          <span class="ln"><span class="wrn">●</span> ai/scoring-engine · tuning</span>
+          <span class="ln"><span class="wrn">●</span> upskill/curriculum · seeding</span>
+          <span class="ln"><span class="cm"># next: payment-gating + ATS export</span></span>
+          <span class="ln"><span class="pr">$</span> <span class="cur">deploy --env=prod </span></span>
         </div>
       </a>
 
