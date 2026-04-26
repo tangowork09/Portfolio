@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tanish Goel — Senior Frontend Engineer</title>
+<meta name="description" content="Senior Frontend Engineer. 4+ years architecting React/TypeScript platforms across healthcare, fintech, and HRIS. Specialist in build-tool migrations, Puppeteer automation, and Claude Code agentic workflows." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0908;
+    --bg-2: #111110;
+    --paper: #f4f1ea;
+    --ink: #161513;
+    --text: #ebe6dc;
+    --muted: #8a857c;
+    --rule: rgba(235, 230, 220, 0.09);
+    --rule-strong: rgba(235, 230, 220, 0.18);
+    --flare: #ff5e1f;
+    --signal: #b9ff3c;
+    --grid: 88px;
+
+    --serif: 'Fraunces', 'Times New Roman', serif;
+    --mono: 'JetBrains Mono', 'Menlo', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: var(--bg); color: var(--text); }
+
+  body {
+    font-family: var(--serif);
+    font-feature-settings: "ss01", "ss02";
+    line-height: 1.5;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Grain + grid overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size: var(--grid) var(--grid);
+    z-index: 1;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.95  0 0 0 0 0.85  0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    z-index: 2;
+  }
+
+  /* Custom crosshair cursor */
+  .cursor {
+    position: fixed;
+    width: 28px; height: 28px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    transition: width .25s cubic-bezier(.2,.8,.2,1), height .25s cubic-bezier(.2,.8,.2,1);
+  }
+  .cursor::before, .cursor::after {
+    content: ''; position: absolute; background: var(--paper);
+  }
+  .cursor::before { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+  .cursor::after { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+  .cursor.hover { width: 56px; height: 56px; }
+  .cursor.hover::before, .cursor.hover::after { background: var(--flare); }
+
+  /* Scroll progress */
+  .scroll-bar {
+    position: fixed; top: 0; left: 0; height: 2px;
+    background: var(--flare);
+    z-index: 50;
+    box-shadow: 0 0 18px var(--flare);
+  }
+
+  /* Side rails */
+  .rail {
+    position: fixed;
+    top: 0; bottom: 0;
+    width: 56px;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0;
+    pointer-events: none;
+  }
+  .rail-l { left: 0; border-right: 1px solid var(--rule-strong); }
+  .rail-r { right: 0; border-left: 1px solid var(--rule-strong); }
+  .rail .lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    color: var(--muted);
+  }
+  .rail .lbl.flare { color: var(--flare); }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 4px rgba(185,255,60,.12), 0 0 14px var(--signal);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .55; transform: scale(.85); }
+  }
+
+  main {
+    position: relative;
+    z-index: 3;
+    margin: 0 56px;
+    padding: 0;
+  }
+
+  section {
+    position: relative;
+    padding: 120px max(40px, 6vw);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  /* Section header (mono numeral + label) */
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 64px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sec-head .num { color: var(--flare); }
+  .sec-head .line { flex: 1; height: 1px; background: var(--rule-strong); }
+
+  /* ----- HERO ----- */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: space-between;
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  .hero-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero-top .col { display: flex; flex-direction: column; gap: 8px; }
+  .hero-top .col .v { color: var(--text); letter-spacing: 0.06em; text-transform: none; font-size: 12px; }
+  .hero-top .meta-r { text-align: right; }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "wght" 320, "SOFT" 30;
+    font-size: clamp(72px, 16vw, 260px);
+    line-height: 0.86;
+    letter-spacing: -0.03em;
+    margin-top: 60px;
+    color: var(--paper);
+    position: relative;
+  }
+  .hero-name .em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "wght" 380, "SOFT" 80;
+    color: var(--flare);
+  }
+  .hero-name .small-em {
+    font-family: var(--mono);
+    font-size: 0.10em;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    vertical-align: super;
+    margin-left: 12px;
+  }
+
+  .hero-tagline {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 28px;
+  }
+  .hero-tagline p {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.45;
+    max-width: 560px;
+    color: var(--text);
+  }
+  .hero-tagline p .accent { color: var(--flare); font-style: italic; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .stat {
+    border-left: 1px solid var(--rule-strong);
+    padding-left: 14px;
+  }
+  .stat .n {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "wght" 350;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1;
+    color: var(--paper);
+    display: block;
+  }
+  .stat .l {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-top: 8px;
+    display: block;
+  }
+  .stat .n .pct { color: var(--flare); font-style: italic; }
+
+  .scroll-cue {
+    margin-top: 56px;
+    display: flex; align-items: center; gap: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .scroll-cue .dash {
+    width: 56px; height: 1px; background: var(--paper);
+    animation: dash 2s ease-in-out infinite;
+    transform-origin: left;
+  }
+  @keyframes dash {
+    0%, 100% { transform: scaleX(0.2); }
+    50% { transform: scaleX(1); }
+  }
+
+  /* ----- ABOUT / MARQUEE ----- */
+  .marquee-band {
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+    padding: 18px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .marquee-band .track {
+    display: inline-block;
+    animation: marquee 40s linear infinite;
+    font-family: var(--serif);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "wght" 320;
+    font-size: clamp(28px, 4vw, 56px);
+    color: var(--paper);
+  }
+  .marquee-band .track span { margin: 0 28px; }
+  .marquee-band .track .dot { color: var(--flare); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .about {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 80px;
+  }
+  .about .lhs {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 2;
+  }
+  .about .lhs ul { list-style: none; }
+  .about .lhs ul li { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--rule); padding: 4px 0; }
+  .about .lhs ul li .v { color: var(--text); letter-spacing: 0.06em; text-transform: none; font-size: 12px; }
+  .about .rhs p {
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.5;
+    max-width: 720px;
+    margin-bottom: 28px;
+  }
+  .about .rhs p:first-child::first-letter {
+    font-size: 4em;
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "wght" 350;
+    float: left;
+    line-height: 0.85;
+    margin: 6px 14px 0 0;
+    color: var(--flare);
+  }
+  .about .rhs em { color: var(--flare); font-style: italic; }
+
+  /* ----- EXPERIENCE ----- */
+  .roles {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .role {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.0));
+    padding: 36px;
+    display: grid;
+    grid-template-columns: 220px 1fr 280px;
+    gap: 36px;
+    transition: border-color .35s ease, transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .role:hover { border-color: var(--flare); transform: translateY(-2px); }
+
+  .role .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .role .meta .when { color: var(--flare); margin-top: 8px; display: block; letter-spacing: 0.12em; }
+  .role .meta .where { color: var(--text); margin-top: 8px; display: block; letter-spacing: 0.06em; text-transform: none; font-size: 12px; }
+  .role .meta .live { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--signal); font-size: 10px; }
+  .role .meta .live .d { width: 7px; height: 7px; background: var(--signal); border-radius: 50%; animation: pulse 1.6s infinite; }
+
+  .role h3 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 100, "wght" 400;
+    font-size: clamp(24px, 2vw, 32px);
+    line-height: 1.15;
+    color: var(--paper);
+    margin-bottom: 6px;
+  }
+  .role h3 .at { color: var(--muted); font-style: italic; font-size: 0.7em; margin-left: 6px; }
+  .role .bullets {
+    margin-top: 18px;
+    display: flex; flex-direction: column;
+    gap: 14px;
+  }
+  .role .bullets li {
+    list-style: none;
+    padding-left: 22px;
+    position: relative;
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .role .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 11px;
+    width: 12px; height: 1px;
+    background: var(--flare);
+  }
+  .role .bullets li .b { font-weight: 600; color: var(--paper); }
+  .role .bullets li .stack {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .role .pin {
+    align-self: start;
+    border: 1px solid var(--rule-strong);
+    padding: 22px;
+    background: var(--bg-2);
+    transform: rotate(0.7deg);
+  }
+  .role .pin .lab {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .role .pin .big {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "wght" 380;
+    font-size: 64px;
+    line-height: 0.9;
+    color: var(--flare);
+    font-style: italic;
+    display: block;
+    margin: 8px 0 6px;
+  }
+  .role .pin p {
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+
+  /* ----- PROJECTS BENTO ----- */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(180px, auto);
+    gap: 20px;
+  }
+  .card {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    padding: 28px;
+    overflow: hidden;
+    transition: border-color .3s ease, transform .4s cubic-bezier(.2,.8,.2,1);
+    background: var(--bg-2);
+  }
+  .card:hover { border-color: var(--flare); }
+  .card::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(800px 400px at var(--mx, 50%) var(--my, 50%), rgba(255,94,31,0.07), transparent 60%);
+    pointer-events: none;
+    transition: opacity .4s ease;
+    opacity: 0;
+  }
+  .card:hover::after { opacity: 1; }
+
+  .card .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .card h4 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 100, "wght" 400;
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.15;
+    margin-top: 14px;
+    color: var(--paper);
+  }
+  .card h4 .arr { color: var(--flare); font-style: italic; }
+  .card p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+    margin-top: 14px;
+    max-width: 60ch;
+  }
+  .card .stack {
+    margin-top: 18px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .card .stack .chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 8px;
+    border: 1px solid var(--rule-strong);
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .card .link {
+    margin-top: 22px;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--paper);
+    text-decoration: none;
+    border-bottom: 1px solid var(--paper);
+    padding-bottom: 4px;
+    width: fit-content;
+  }
+  .card .link:hover { color: var(--flare); border-color: var(--flare); }
+
+  .c-1 { grid-column: span 4; grid-row: span 2; }
+  .c-2 { grid-column: span 2; grid-row: span 1; }
+  .c-3 { grid-column: span 2; grid-row: span 1; }
+  .c-4 { grid-column: span 3; grid-row: span 1; }
+  .c-5 { grid-column: span 3; grid-row: span 1; }
+  .c-6 { grid-column: span 3; grid-row: span 1; }
+  .c-7 { grid-column: span 3; grid-row: span 1; }
+  .c-8 { grid-column: span 6; grid-row: span 1; }
+
+  /* Noir card variant */
+  .card.noir {
+    background:
+      radial-gradient(900px 500px at 0% 0%, rgba(255,94,31,0.12), transparent 55%),
+      radial-gradient(700px 400px at 100% 100%, rgba(185,255,60,0.05), transparent 55%),
+      linear-gradient(180deg, #0d0a08, #0a0908);
+    border-color: rgba(255,94,31,0.28);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 36px;
+    align-items: center;
+    min-height: 320px;
+  }
+  .card.noir h4 { font-size: clamp(34px, 4vw, 64px); line-height: 1.02; letter-spacing: -0.02em; }
+  .card.noir h4 .sub { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--flare); margin-top: 14px; font-style: normal; }
+  .card.noir p { font-size: 16px; max-width: 56ch; }
+  .card.noir .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 22px;
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 18px;
+  }
+  .card.noir .meta-grid .m {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .card.noir .meta-grid .m b {
+    display: block;
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "wght" 380;
+    font-size: 28px;
+    color: var(--flare);
+    font-style: italic;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 4px;
+  }
+  .case-file {
+    border: 1px solid var(--rule-strong);
+    padding: 22px;
+    background: rgba(0,0,0,0.4);
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+  .case-file::before {
+    content: 'CASE FILE / 1987';
+    position: absolute;
+    top: -10px; left: 16px;
+    background: var(--bg);
+    padding: 0 8px;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: var(--flare);
+  }
+  .case-file .row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--rule); padding: 4px 0; }
+  .case-file .row span:last-child { color: var(--paper); }
+  .case-file .stamp {
+    margin-top: 12px;
+    display: inline-block;
+    border: 2px solid var(--flare);
+    color: var(--flare);
+    padding: 4px 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    transform: rotate(-3deg);
+    font-size: 10px;
+  }
+
+  .card.featured {
+    background:
+      radial-gradient(1000px 600px at 100% 0%, rgba(255,94,31,0.18), transparent 50%),
+      linear-gradient(180deg, #1a1714, #0e0d0c);
+    border-color: rgba(255,94,31,0.35);
+  }
+  .card.featured h4 { font-size: clamp(32px, 3.6vw, 56px); line-height: 1.05; }
+  .card.featured p { font-size: 16px; max-width: 50ch; }
+
+  /* Mini chart in featured */
+  .vitals {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    align-items: end;
+    height: 80px;
+  }
+  .vitals .b {
+    background: var(--flare);
+    opacity: 0.85;
+    transform-origin: bottom;
+    animation: rise 1.4s cubic-bezier(.2,.8,.2,1) backwards;
+  }
+  .vitals .b:nth-child(1) { height: 30%; animation-delay: .05s; }
+  .vitals .b:nth-child(2) { height: 55%; animation-delay: .12s; }
+  .vitals .b:nth-child(3) { height: 40%; animation-delay: .18s; }
+  .vitals .b:nth-child(4) { height: 75%; animation-delay: .25s; }
+  .vitals .b:nth-child(5) { height: 60%; animation-delay: .31s; }
+  .vitals .b:nth-child(6) { height: 90%; background: var(--signal); animation-delay: .38s; }
+  .vitals .b:nth-child(7) { height: 50%; animation-delay: .44s; }
+  @keyframes rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+  /* ----- SKILLS ----- */
+  .skills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px 80px;
+  }
+  .skill-group .lab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--flare);
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    display: flex; justify-content: space-between;
+  }
+  .skill-group .lab .ct { color: var(--muted); }
+  .skill-list {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .skill-list .item {
+    font-family: var(--serif);
+    font-size: 18px;
+    padding: 6px 14px;
+    border: 1px solid var(--rule-strong);
+    background: rgba(255,255,255,0.012);
+    transition: all .3s ease;
+  }
+  .skill-list .item:hover {
+    border-color: var(--flare);
+    color: var(--flare);
+    transform: translateY(-2px);
+  }
+  .skill-list .item.hot { background: var(--flare); color: var(--ink); border-color: var(--flare); font-style: italic; }
+
+  /* ----- ACHIEVEMENTS / EDUCATION ----- */
+  .ach {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+  .ach-block {
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 28px;
+  }
+  .ach-block .lab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .ach-block ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .ach-block li {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.4;
+  }
+  .ach-block li .yr {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--flare);
+    letter-spacing: 0.1em;
+    margin-right: 10px;
+  }
+  .gpa {
+    display: inline-block;
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "wght" 380;
+    font-size: 96px;
+    color: var(--flare);
+    font-style: italic;
+    line-height: 1;
+    margin-top: 8px;
+  }
+  .gpa .of { font-size: 0.4em; color: var(--muted); font-style: normal; margin-left: 6px; }
+
+  /* ----- CONTACT ----- */
+  .contact {
+    padding-top: 160px; padding-bottom: 160px;
+    text-align: left;
+  }
+  .contact .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--flare);
+    margin-bottom: 36px;
+  }
+  .contact .kicker .ind { display: inline-flex; align-items: center; gap: 8px; }
+  .contact .kicker .ind .d { width: 8px; height: 8px; background: var(--signal); border-radius: 50%; animation: pulse 1.6s infinite; }
+
+  .contact h2 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "wght" 320, "SOFT" 30;
+    font-size: clamp(56px, 10vw, 180px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+  }
+  .contact h2 em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "wght" 360, "SOFT" 80;
+    color: var(--flare);
+  }
+  .contact .mail {
+    margin-top: 56px;
+    display: inline-block;
+    font-family: var(--serif);
+    font-size: clamp(28px, 3.4vw, 56px);
+    color: var(--paper);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 14px;
+    transition: color .3s, border-color .3s;
+  }
+  .contact .mail:hover { color: var(--flare); border-color: var(--flare); }
+
+  .contact-grid {
+    margin-top: 80px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 36px;
+  }
+  .contact-grid .col .lab {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .contact-grid .col a, .contact-grid .col span {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .contact-grid .col a:hover { color: var(--flare); }
+
+  /* ----- FOOTER ----- */
+  footer {
+    padding: 30px max(40px, 6vw);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px solid var(--rule-strong);
+    margin: 0 56px;
+    position: relative; z-index: 3;
+  }
+  footer .l { display: flex; align-items: center; gap: 12px; }
+  footer .live-dot { width: 7px; height: 7px; }
+
+  /* Reveal animations */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Responsive */
+  @media (max-width: 980px) {
+    main, footer { margin: 0; }
+    .rail { display: none; }
+    body { cursor: auto; }
+    .cursor { display: none; }
+    .role { grid-template-columns: 1fr; }
+    .role .pin { transform: none; }
+    .hero-tagline { grid-template-columns: 1fr; gap: 36px; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .about { grid-template-columns: 1fr; gap: 32px; }
+    .skills { grid-template-columns: 1fr; gap: 40px; }
+    .ach { grid-template-columns: 1fr; gap: 40px; }
+    .bento { grid-template-columns: 1fr; }
+    .c-1, .c-2, .c-3, .c-4, .c-5, .c-6, .c-7, .c-8 { grid-column: span 1; grid-row: auto; }
+    .card.noir { grid-template-columns: 1fr; gap: 24px; min-height: auto; }
+    .contact-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+    section { padding: 80px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="scroll-bar" id="scroll"></div>
+
+<aside class="rail rail-l" aria-hidden="true">
+  <span class="lbl">TG · 2026</span>
+  <span class="lbl flare">SENIOR FRONTEND ENGINEER</span>
+  <span class="lbl"><span class="live-dot" style="display:inline-block;vertical-align:middle;margin-bottom:4px"></span></span>
+</aside>
+<aside class="rail rail-r" aria-hidden="true">
+  <span class="lbl">DELHI · IN · GMT+5:30</span>
+  <span class="lbl">PORTFOLIO / V.04</span>
+  <span class="lbl flare">↓ SCROLL</span>
+</aside>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="hero-top">
+        <div class="col">
+          <span>Portfolio</span>
+          <span class="v">2026 · Edition Four</span>
+        </div>
+        <div class="col" style="text-align:center">
+          <span>Status</span>
+          <span class="v" style="color:var(--signal)">● Open to roles</span>
+        </div>
+        <div class="col meta-r">
+          <span>Index</span>
+          <span class="v">00 → 06</span>
+        </div>
+      </div>
+
+      <h1 class="hero-name">
+        Tanish<br>
+        Goel<span class="small-em">/01</span>
+      </h1>
+
+      <div class="hero-tagline reveal">
+        <p>
+          Senior Frontend Engineer architecting <span class="accent">React/TypeScript platforms</span> across healthcare, fintech &amp; HRIS. Specialist in build-tool migrations, Puppeteer automation, and Claude Code agentic workflows.
+        </p>
+        <div class="hero-stats">
+          <div class="stat"><span class="n">04<span class="pct">+</span></span><span class="l">Years shipping</span></div>
+          <div class="stat"><span class="n"><span class="pct">90%</span></span><span class="l">API latency cut</span></div>
+          <div class="stat"><span class="n">44<span class="pct">k</span></span><span class="l">Duplicate assets killed</span></div>
+          <div class="stat"><span class="n"><span class="pct">60%</span></span><span class="l">Build perf gain</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue">
+      <span class="dash"></span>
+      <span>↓ Begin index</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-band" aria-hidden="true">
+    <div class="track">
+      <span>React 18</span><span class="dot">·</span>
+      <span><em>TypeScript</em></span><span class="dot">·</span>
+      <span>Next.js</span><span class="dot">·</span>
+      <span>Vite</span><span class="dot">·</span>
+      <span><em>Puppeteer</em></span><span class="dot">·</span>
+      <span>Kafka</span><span class="dot">·</span>
+      <span>Claude Code</span><span class="dot">·</span>
+      <span><em>Ag-Grid Enterprise</em></span><span class="dot">·</span>
+      <span>Redux-Saga</span><span class="dot">·</span>
+      <span>Twilio</span><span class="dot">·</span>
+      <span><em>Highcharts</em></span><span class="dot">·</span>
+      <span>HTML5 Canvas</span><span class="dot">·</span>
+      <span>React 18</span><span class="dot">·</span>
+      <span><em>TypeScript</em></span><span class="dot">·</span>
+      <span>Next.js</span><span class="dot">·</span>
+      <span>Vite</span><span class="dot">·</span>
+      <span><em>Puppeteer</em></span><span class="dot">·</span>
+      <span>Kafka</span><span class="dot">·</span>
+      <span>Claude Code</span><span class="dot">·</span>
+      <span><em>Ag-Grid Enterprise</em></span><span class="dot">·</span>
+      <span>Redux-Saga</span><span class="dot">·</span>
+      <span>Twilio</span><span class="dot">·</span>
+      <span><em>Highcharts</em></span><span class="dot">·</span>
+      <span>HTML5 Canvas</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="sec-head">
+      <span class="num">/02</span><span>About · Brief</span><span class="line"></span><span>File 02 of 06</span>
+    </div>
+
+    <div class="about">
+      <div class="lhs">
+        <ul>
+          <li><span>Role</span><span class="v">Sr. Frontend</span></li>
+          <li><span>Years</span><span class="v">4+ shipping</span></li>
+          <li><span>Base</span><span class="v">Delhi, IN</span></li>
+          <li><span>Tz</span><span class="v">GMT+5:30</span></li>
+          <li><span>Focus</span><span class="v">RPM · Fintech · HRIS</span></li>
+          <li><span>Lang</span><span class="v">TS · JS · C++</span></li>
+          <li><span>Stack</span><span class="v">React 18 / Node</span></li>
+          <li><span>Edu</span><span class="v">Chitkara · CSE</span></li>
+          <li><span>Status</span><span class="v" style="color:var(--signal)">● Live</span></li>
+        </ul>
+      </div>
+
+      <div class="rhs">
+        <p>
+          Four years architecting frontend platforms that move real money, real medical data, and real automation. Built a multi-tenant healthcare RPM/CCM system from scratch — patients, doctors, hospitals, vendors, all under one role-based access mesh. Shipped a Puppeteer pipeline that auto-files insurance claims into eClinicalWorks and cuts 60% of manual data-entry off the ops team.
+        </p>
+        <p>
+          More recently — migrated <em>two full-stack codebases from Node v12 to v24 in a single working day</em>, eliminated 44,000+ duplicate assets across a consumer web app, and pioneered AI-agent-driven delivery workflows on Claude Code that score prompts and benchmark team productivity.
+        </p>
+        <p>
+          I optimize for impact-per-line: smaller diffs, sharper migrations, fewer regressions. Bias toward shipping. Bias toward building the boring tooling first.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="sec-head">
+      <span class="num">/03</span><span>Field Notes · Work history</span><span class="line"></span><span>3 roles</span>
+    </div>
+
+    <div class="roles">
+
+      <article class="role reveal">
+        <div class="meta">
+          <span>Role 01</span>
+          <span class="when">Dec 2025 → Now</span>
+          <span class="where">Visit Health · India</span>
+          <span class="live"><span class="d"></span> Currently shipping</span>
+        </div>
+        <div>
+          <h3>Full Stack Developer<span class="at">at Visit Health</span></h3>
+          <ul class="bullets">
+            <li><span class="b">Engineered an end-to-end CleverTap + Amplitude analytics pipeline</span> — TypeScript event APIs, a Kafka consumer for cross-repo event fan-out, and dual-write persistence into the client DB and internal SQL warehouse.<span class="stack">Node · TS · Kafka · SQL · CleverTap · Amplitude</span></li>
+            <li><span class="b">Migrated 2 full-stack codebases from Node v12 → v24</span> in a single working day, resolving 30+ cascading dependency breaks and unblocking modern tooling.<span class="stack">Node · npm · TypeScript</span></li>
+            <li><span class="b">Audited and eliminated 44,000+ duplicate assets</span> across the consumer web app — materially reduced bundle size, improved TTI on low-end devices in tier-2/3 cities.<span class="stack">React · Tailwind</span></li>
+            <li><span class="b">Refactored legacy class-based React → functional/hooks (~30% LOC ↓)</span>; integrated Visit App SDK with conditional SSO-based navigation across enterprise clinic webviews.<span class="stack">React 18 · TS · Visit App SDK</span></li>
+            <li><span class="b">Pioneered an AI-agent-driven delivery workflow on Claude Code</span> — authored a custom <code style="font-family:var(--mono);background:var(--bg-2);padding:1px 6px;border:1px solid var(--rule-strong)">ai-orchestrator</code> skill for daily reporting, prompt scoring, and team productivity benchmarking; shipped ABW/HNI enterprise tickets (EAP card mapping, cashless physiotherapy).<span class="stack">Claude Code · Claude Agents · React · Redux</span></li>
+          </ul>
+        </div>
+        <aside class="pin">
+          <span class="lab">Headline metric</span>
+          <span class="big">v12→v24</span>
+          <p>Two full-stack codebases migrated in a single working day. 30+ cascading dependency breaks resolved. Modern tooling unblocked overnight.</p>
+        </aside>
+      </article>
+
+      <article class="role reveal">
+        <div class="meta">
+          <span>Role 02</span>
+          <span class="when">Nov 2022 → Nov 2025</span>
+          <span class="where">Gemini Solutions · Gurugram</span>
+        </div>
+        <div>
+          <h3>Software Engineer L2<span class="at">at Gemini Solutions</span></h3>
+          <ul class="bullets">
+            <li><span class="b">Architected a healthcare RPM/CCM platform from scratch</span> — multi-hospital, multi-doctor, multi-tenant RBAC (admin / doctor / hospital / vendor), patient programs, vitals, HRA assessment engine (MCQ, subjective, table, free-text), Twilio call recording &amp; outbound dialing, QR-based device-scanner for BP-device lending, and 20+ Ag-Grid Enterprise views with advanced filters and child rows.<span class="stack">React 18 · TS · Redux-Saga · Ag-Grid · Highcharts · MUI · Twilio</span></li>
+            <li><span class="b">Built a Puppeteer pipeline for the eClinicalWorks (ECW) platform</span> that auto-validates Dx/Rx codes and submits insurance claims — cut manual effort 60% with retry logic, cron, structured logs, and Excel metric reports.<span class="stack">Puppeteer · Node · Cron · ExcelJS</span></li>
+            <li><span class="b">Led migration of 5+ projects from CRA → Vite</span>, improving build perf by 60%+; ran KT sessions on Vite migration and Puppeteer to 15+ engineers.<span class="stack">Vite · React · ESBuild · Rollup</span></li>
+            <li><span class="b">Cut API latency 20s → 2s (90%↓)</span> via payload compression and client-side decompression on critical workflows.<span class="stack">React · gzip · Web APIs</span></li>
+            <li><span class="b">Refactored monolithic 2,000+ LOC components</span> into modular, reusable architecture — cut PR review time and unblocked parallel feature development.<span class="stack">React · Redux · MUI · TypeScript</span></li>
+            <li><span class="b">First engineer in the org to operationalize AI-prompted delivery</span> — increased personal output ~20%; ran internal sessions on prompt engineering with ChatGPT and Copilot.<span class="stack">ChatGPT · Copilot · Prompt Engineering</span></li>
+            <li><span class="b">Spearheaded a banking-client Angular → React migration</span>; contributed to Angular HRIS covering employee onboarding and offer-letter lifecycle, with Datadog RUM for real-user perf.<span class="stack">React · Redux · Angular · TS · Datadog</span></li>
+          </ul>
+        </div>
+        <aside class="pin" style="transform: rotate(-0.6deg)">
+          <span class="lab">Latency reduction</span>
+          <span class="big">20s→2s</span>
+          <p>API workflow compressed via gzip + client decompression on a critical hospital-side flow. 90% latency cut. Same payload, sharper UX.</p>
+        </aside>
+      </article>
+
+      <article class="role reveal">
+        <div class="meta">
+          <span>Role 03</span>
+          <span class="when">Jul 2020 → Jul 2022</span>
+          <span class="where">TrackO MD-RPM · Remote</span>
+        </div>
+        <div>
+          <h3>Full Stack Developer · Freelance<span class="at">at TrackO MD-RPM</span></h3>
+          <ul class="bullets">
+            <li><span class="b">Delivered end-to-end healthcare solutions across web and mobile</span> — RPM dashboards, claims automation, digital health engagement — shipped live to App Store, Play Store, and 3+ web platforms.<span class="stack">React · React Native · Next.js · TS · MongoDB · Redux · MUI · Highcharts · Twilio · Puppeteer · AWS</span></li>
+          </ul>
+        </div>
+        <aside class="pin" style="transform: rotate(0.4deg)">
+          <span class="lab">Solo shipped</span>
+          <span class="big">3+</span>
+          <p>Web platforms live. Mobile app on App Store + Play Store. Backend on AWS. Single-handed end-to-end delivery for a US healthcare client.</p>
+        </aside>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="sec-head">
+      <span class="num">/04</span><span>Selected Work · Projects</span><span class="line"></span><span>7 artifacts</span>
+    </div>
+
+    <div class="bento">
+      <a class="card c-1 featured reveal" href="https://care.md-rpm.com/" target="_blank" rel="noopener">
+        <span class="tag">/// 01 · LIVE PRODUCTION</span>
+        <h4>Care Center<br><em>RPM Dashboard <span class="arr">↗</span></em></h4>
+        <p>Multi-tenant Remote Patient Monitoring platform — vitals, alert routing, care coordination, Twilio teleconsultation, hospital-grade access control. Built ground-up.</p>
+        <div class="vitals" aria-hidden="true">
+          <span class="b"></span><span class="b"></span><span class="b"></span><span class="b"></span><span class="b"></span><span class="b"></span><span class="b"></span>
+        </div>
+        <div class="stack">
+          <span class="chip">React</span>
+          <span class="chip">TypeScript</span>
+          <span class="chip">MongoDB</span>
+          <span class="chip">Redux</span>
+          <span class="chip">Ag-Grid</span>
+          <span class="chip">Highcharts</span>
+          <span class="chip">Twilio</span>
+        </div>
+        <span class="link">Open live → care.md-rpm.com</span>
+      </a>
+
+      <a class="card c-2 reveal" href="https://play.google.com/store/apps/details?id=com.mdrpm.tracko" target="_blank" rel="noopener">
+        <span class="tag">/// 02 · MOBILE</span>
+        <h4>Tracko <em><span class="arr">↗</span></em></h4>
+        <p>Cross-platform health app: BP, glucose, pulse, trends, reminders, caretaker sharing.</p>
+        <div class="stack">
+          <span class="chip">React Native</span>
+          <span class="chip">TypeScript</span>
+          <span class="chip">MongoDB</span>
+        </div>
+        <span class="link">Play / App Store</span>
+      </a>
+
+      <a class="card c-3 reveal" href="https://www.md-rpm.com/" target="_blank" rel="noopener">
+        <span class="tag">/// 03 · SSR MARKETING</span>
+        <h4>MD-RPM <em>Site <span class="arr">↗</span></em></h4>
+        <p>SSR marketing + service platform for connected-device integration.</p>
+        <div class="stack">
+          <span class="chip">Next.js</span>
+          <span class="chip">TS</span>
+          <span class="chip">MongoDB</span>
+          <span class="chip">Formik</span>
+          <span class="chip">Yup</span>
+        </div>
+        <span class="link">md-rpm.com</span>
+      </a>
+
+      <div class="card c-4 reveal">
+        <span class="tag">/// 04 · CLAUDE SKILL</span>
+        <h4>AI Orchestrator <em>v3</em></h4>
+        <p>Custom Claude skill + 7-tab React dashboard. 6 modules: prompt-engine, cli-monitor, context-tracker, team-analytics, knowledge-engine, scoring-engine. 9 productivity metrics, auto-generated flashcard quizzes.</p>
+        <div class="stack">
+          <span class="chip">React</span>
+          <span class="chip">Claude Skills</span>
+          <span class="chip">Recharts</span>
+        </div>
+      </div>
+
+      <div class="card c-5 reveal">
+        <span class="tag">/// 05 · INTERNAL TOOLING</span>
+        <h4>ECW Claims Pipeline <em>(Puppeteer)</em></h4>
+        <p>Headless automation that logs into eClinicalWorks, validates Dx/Rx codes against payer rules, submits claims, retries on transient errors, cron-schedules itself, and emails Excel metrics back to ops. -60% manual effort.</p>
+        <div class="stack">
+          <span class="chip">Puppeteer</span>
+          <span class="chip">Node</span>
+          <span class="chip">Cron</span>
+          <span class="chip">ExcelJS</span>
+        </div>
+      </div>
+
+      <a class="card c-6 reveal" href="https://freemf.vercel.app/" target="_blank" rel="noopener">
+        <span class="tag">/// 06 · FINTECH SANDBOX</span>
+        <h4>FreeMF <em>API Explorer <span class="arr">↗</span></em></h4>
+        <p>Mutual-funds API explorer — browse fund schemes, query NAV history, inspect endpoints. Built for retail investors and fintech tinkerers who want raw data without paywalls.</p>
+        <div class="stack">
+          <span class="chip">React</span>
+          <span class="chip">TypeScript</span>
+          <span class="chip">Vercel</span>
+          <span class="chip">REST</span>
+        </div>
+        <span class="link">Open live → freemf.vercel.app</span>
+      </a>
+
+      <a class="card c-7 reveal" href="https://princemoviecreations.pages.dev/home" target="_blank" rel="noopener">
+        <span class="tag">/// 07 · CLIENT · FREELANCE</span>
+        <h4>Prince Movie <em>Creations <span class="arr">↗</span></em></h4>
+        <p>Marketing site for an Indian film production house — services, portfolio, contact funnel. Designed for fast load on mobile-first audiences across tier-2/3 cities; deployed on Cloudflare Pages for global edge delivery.</p>
+        <div class="stack">
+          <span class="chip">React</span>
+          <span class="chip">Tailwind</span>
+          <span class="chip">Cloudflare Pages</span>
+          <span class="chip">SSG</span>
+        </div>
+        <span class="link">Open live → princemoviecreations.pages.dev</span>
+      </a>
+
+      <a class="card c-8 noir reveal" href="https://github.com/tangowork09/Detective-Game" target="_blank" rel="noopener">
+        <div>
+          <span class="tag">/// 08 · GAME · BUILT WITH CLAUDE IN 2 HOURS</span>
+          <h4>The Vanishing Hour
+            <span class="sub">Noir point-and-click · Hollow Bay · 1987</span>
+          </h4>
+          <p>Disgraced ex-detective Adrian Vale receives a letter from his missing sister. Eight chapters, fourteen puzzles, three endings. Chapters 0–1 fully rendered in Three.js (3D); chapters 2–8 fall back to Phaser 2D scenes. Web Speech API voiceovers — zero API cost. Vertical slice playable end-to-end.</p>
+          <div class="meta-grid">
+            <div class="m"><b>2 hrs</b>build time · Claude</div>
+            <div class="m"><b>14</b>puzzles · 3 endings</div>
+            <div class="m"><b>8</b>chapters · MIT</div>
+          </div>
+          <div class="stack" style="margin-top:18px">
+            <span class="chip">React 19</span>
+            <span class="chip">Vite 6</span>
+            <span class="chip">TypeScript 5.7</span>
+            <span class="chip">Three.js</span>
+            <span class="chip">@react-three/fiber</span>
+            <span class="chip">Phaser 3.90</span>
+            <span class="chip">Zustand 5</span>
+            <span class="chip">Howler.js</span>
+            <span class="chip">Web Speech API</span>
+            <span class="chip">Vitest</span>
+            <span class="chip">Playwright</span>
+          </div>
+          <span class="link" style="margin-top:22px">View source → github.com/tangowork09/Detective-Game</span>
+        </div>
+        <div class="case-file" aria-hidden="true">
+          <div class="row"><span>Subject</span><span>Adrian Vale</span></div>
+          <div class="row"><span>Status</span><span style="color:var(--flare)">Ex-Detective</span></div>
+          <div class="row"><span>Location</span><span>Hollow Bay, MA</span></div>
+          <div class="row"><span>Year</span><span>1987</span></div>
+          <div class="row"><span>Missing</span><span>1 (sister)</span></div>
+          <div class="row"><span>Lead</span><span>Anonymous letter</span></div>
+          <div class="row"><span>Suspects</span><span>Unknown</span></div>
+          <div class="row"><span>Endings</span><span>3 possible</span></div>
+          <span class="stamp">CLASSIFIED</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="sec-head">
+      <span class="num">/05</span><span>Toolbox · Stack</span><span class="line"></span><span>5 groups</span>
+    </div>
+
+    <div class="skills">
+      <div class="skill-group">
+        <div class="lab"><span>Frontend</span><span class="ct">14</span></div>
+        <div class="skill-list">
+          <span class="item hot">React 18</span>
+          <span class="item">React Native</span>
+          <span class="item">Next.js</span>
+          <span class="item">Angular</span>
+          <span class="item hot">TypeScript</span>
+          <span class="item">Redux/Saga</span>
+          <span class="item">Material UI</span>
+          <span class="item">Ag-Grid Enterprise</span>
+          <span class="item">Highcharts</span>
+          <span class="item">Formik / Yup</span>
+          <span class="item hot">Vite</span>
+          <span class="item">Tailwind</span>
+          <span class="item">Sass</span>
+          <span class="item">HTML5 Canvas</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="lab"><span>Backend / Infra</span><span class="ct">8</span></div>
+        <div class="skill-list">
+          <span class="item">Node.js</span>
+          <span class="item">Express</span>
+          <span class="item">MongoDB</span>
+          <span class="item">PostgreSQL</span>
+          <span class="item hot">Kafka</span>
+          <span class="item">AWS</span>
+          <span class="item">Jenkins</span>
+          <span class="item">GitHub Actions</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="lab"><span>Automation &amp; AI</span><span class="ct">5</span></div>
+        <div class="skill-list">
+          <span class="item hot">Puppeteer</span>
+          <span class="item hot">Claude Code</span>
+          <span class="item">Claude Agents</span>
+          <span class="item">Prompt Engineering</span>
+          <span class="item">GitHub Copilot</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="lab"><span>Analytics</span><span class="ct">4</span></div>
+        <div class="skill-list">
+          <span class="item">CleverTap</span>
+          <span class="item">Amplitude</span>
+          <span class="item">Datadog RUM</span>
+          <span class="item">Google Analytics</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS / EDUCATION -->
+  <section id="education">
+    <div class="sec-head">
+      <span class="num">/06</span><span>Honors &amp; Education</span><span class="line"></span><span>End of file</span>
+    </div>
+
+    <div class="ach">
+      <div class="ach-block">
+        <div class="lab">Honors</div>
+        <ul>
+          <li><span class="yr">2025</span>Employee of the Quarter — Gemini Solutions</li>
+          <li><span class="yr">2024</span>2nd place · internal hackathon</li>
+          <li><span class="yr">2024</span>Role Model Award</li>
+          <li><span class="yr">2023</span>First engineer in the org to operationalize AI-prompted delivery; led internal KT on prompt engineering and Claude Code agents</li>
+        </ul>
+      </div>
+
+      <div class="ach-block">
+        <div class="lab">Education</div>
+        <p style="font-family:var(--serif);font-size:22px;line-height:1.4">Bachelor of Engineering · Chitkara University<br><span style="color:var(--muted);font-size:16px">Computer Science &amp; Engineering · 2019–2023</span></p>
+        <span class="gpa">9.86<span class="of">/ 10.0</span></span>
+        <p style="font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:14px">Cumulative GPA</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="kicker">
+      <span class="ind"><span class="d"></span> Status: open · accepting senior / staff inquiries</span>
+    </div>
+    <h2>Let's build<br>something that <em>ships.</em></h2>
+
+    <a href="mailto:tanish.tanish11@gmail.com" class="mail">tanish.tanish11@gmail.com →</a>
+
+    <div class="contact-grid">
+      <div class="col">
+        <div class="lab">Phone</div>
+        <span>+91 9599095571</span>
+      </div>
+      <div class="col">
+        <div class="lab">LinkedIn</div>
+        <a href="https://www.linkedin.com/in/tanish-goel-021982192/" target="_blank" rel="noopener">in/tanish-goel ↗</a>
+      </div>
+      <div class="col">
+        <div class="lab">GitHub</div>
+        <a href="https://github.com/tanishgoel538" target="_blank" rel="noopener">@tanishgoel538 ↗</a>
+      </div>
+      <div class="col">
+        <div class="lab">Location</div>
+        <span>Delhi, IN · GMT+5:30</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="l"><span class="live-dot"></span><span>Live · v04 · 2026</span></div>
+  <div>© Tanish Goel · Hand-built in HTML</div>
+  <div>EOF</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  let cx = window.innerWidth/2, cy = window.innerHeight/2;
+  let tx = cx, ty = cy;
+  document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  function loop() {
+    cx += (tx - cx) * 0.18;
+    cy += (ty - cy) * 0.18;
+    cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('a, .card, .role, .skill-list .item, .mail').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // Scroll progress
+  const bar = document.getElementById('scroll');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  // Card spotlight (mouse-follow gradient)
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Force-reveal hero immediately
+  setTimeout(() => document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('in')), 200);
+</script>
+</body>
+</html>
